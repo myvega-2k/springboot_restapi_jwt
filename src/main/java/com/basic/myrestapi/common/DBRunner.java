@@ -20,13 +20,13 @@ public class DBRunner implements ApplicationRunner {
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		log.debug("DataSource 구현체 = {}  ", dataSource.getClass().getName());
+		log.info("DataSource 구현체 = {}  ", dataSource.getClass().getName());
 		
 		Connection connection = dataSource.getConnection();
 		DatabaseMetaData metaData = connection.getMetaData();
-		log.debug("DB Vendor Name = {}", metaData.getDatabaseProductName());
-		log.debug("DB URL = {} ", metaData.getURL());
-		log.debug("DB Username = {} ", metaData.getUserName());
+		log.info("DB Vendor Name = {}", metaData.getDatabaseProductName());
+		log.info("DB URL = {} ", metaData.getURL());
+		log.info("DB Username = {} ", metaData.getUserName());
 	}
 }
 
