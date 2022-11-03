@@ -25,11 +25,12 @@ public class LectureController {
 
     @PostMapping
     public ResponseEntity createLecture(@RequestBody Lecture lecture) {
-        lecture.setId(10);
+        Lecture addLecture = lectureRepository.save(lecture);
+
         //http://localhost:8080/api/lectures/10
-        WebMvcLinkBuilder selfLinkBuilder = WebMvcLinkBuilder.linkTo(LectureController.class).slash(lecture.getId());
+        WebMvcLinkBuilder selfLinkBuilder = WebMvcLinkBuilder.linkTo(LectureController.class).slash(addLecture.getId());
         URI createUri = selfLinkBuilder.toUri();
-        return ResponseEntity.created(createUri).body(lecture);
+        return ResponseEntity.created(createUri).body(addLecture);
     }
 
 }
