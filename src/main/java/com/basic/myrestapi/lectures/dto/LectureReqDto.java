@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LectureReqDto {
-    @NotBlank
+    @NotBlank(message = "강의명(name)은 필수 입력항목 입니다.")
     private String name;
     @NotEmpty
     private String description;

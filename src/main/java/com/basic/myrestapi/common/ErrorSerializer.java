@@ -14,7 +14,8 @@ public class ErrorSerializer extends JsonSerializer<Errors>{
 	@Override
 	public void serialize(Errors errors, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 		gen.writeStartArray();
-        errors.getFieldErrors().forEach(e -> {
+        errors.getFieldErrors() //List<FieldError>
+                .forEach(e -> {
             try {
                 gen.writeStartObject();
                 gen.writeStringField("field", e.getField());
@@ -31,7 +32,8 @@ public class ErrorSerializer extends JsonSerializer<Errors>{
             }
         });
 
-        errors.getGlobalErrors().forEach(e -> {
+        errors.getGlobalErrors() //List<ObjectError>
+                .forEach(e -> {
             try {
                 gen.writeStartObject();
                 gen.writeStringField("objectName", e.getObjectName());
