@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,18 +14,33 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LectureReqDto {
+    @NotBlank
     private String name;
+    @NotEmpty
     private String description;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
     private LocalDateTime beginEnrollmentDateTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
     private LocalDateTime closeEnrollmentDateTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
     private LocalDateTime beginLectureDateTime;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @NotNull
     private LocalDateTime endLectureDateTime;
+
     private String location;
+
+    @Min(0)
     private int basePrice;
+    @Min(0)
     private int maxPrice;
+    @Min(0)
     private int limitOfEnrollment;
 }
