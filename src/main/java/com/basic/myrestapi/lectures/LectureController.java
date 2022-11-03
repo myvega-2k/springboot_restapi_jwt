@@ -1,5 +1,6 @@
 package com.basic.myrestapi.lectures;
 
+import com.basic.myrestapi.common.ErrorsResource;
 import com.basic.myrestapi.lectures.dto.LectureReqDto;
 import com.basic.myrestapi.lectures.dto.LectureResDto;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,12 @@ public class LectureController {
     public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors) {
         //필드 검증
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
         //로직 검증
         this.lectureValidator.validate(lectureReqDto, errors);
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         // LectureReqDto => Lecture
@@ -62,6 +63,10 @@ public class LectureController {
         lectureResource.add(selfLinkBuilder.withRel("update-lecture"));
 
         return ResponseEntity.created(createUri).body(lectureResource);
+    }
+
+    private ResponseEntity badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 
 }
