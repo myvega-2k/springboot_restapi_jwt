@@ -1,6 +1,9 @@
 package com.basic.myrestapi.lectures;
 
+import com.basic.myrestapi.lectures.dto.LectureReqDto;
+import com.basic.myrestapi.lectures.dto.LectureResDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -17,6 +20,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class LectureController {
     private final LectureRepository lectureRepository;
+    private final ModelMapper modelMapper;
 
     //constructor injection
 //    public LectureController(LectureRepository lectureRepository) {
@@ -24,13 +28,17 @@ public class LectureController {
 //    }
 
     @PostMapping
-    public ResponseEntity createLecture(@RequestBody Lecture lecture) {
+    public ResponseEntity createLecture(@RequestBody LectureReqDto lectureReqDto) {
+        // LectureReqDto => Lecture
+        Lecture lecture = modelMapper.map(lectureReqDto, Lecture.class);
         Lecture addLecture = lectureRepository.save(lecture);
+        // Lecture => LectureResDto
+        LectureResDto lectureResDto = modelMapper.map(addLecture, LectureResDto.class);
 
         //http://localhost:8080/api/lectures/10
         WebMvcLinkBuilder selfLinkBuilder = WebMvcLinkBuilder.linkTo(LectureController.class).slash(addLecture.getId());
         URI createUri = selfLinkBuilder.toUri();
-        return ResponseEntity.created(createUri).body(addLecture);
+        return ResponseEntity.created(createUri).body(lectureResDto);
     }
 
 }
