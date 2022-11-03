@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Controller
 @RequestMapping(value="/api/lectures", produces = MediaTypes.HAL_JSON_VALUE)
 @RequiredArgsConstructor
@@ -52,9 +54,15 @@ public class LectureController {
         LectureResDto lectureResDto = modelMapper.map(addLecture, LectureResDto.class);
 
         //http://localhost:8080/api/lectures/10
-        WebMvcLinkBuilder selfLinkBuilder = WebMvcLinkBuilder.linkTo(LectureController.class).slash(addLecture.getId());
+        WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(lectureResDto.getId());
         URI createUri = selfLinkBuilder.toUri();
-        return ResponseEntity.created(createUri).body(lectureResDto);
+
+        LectureResource lectureResource = new LectureResource(lectureResDto);
+        lectureResource.add(linkTo(LectureController.class).withRel("query-lectures"));
+        lectureResource.add(selfLinkBuilder.withSelfRel());
+        lectureResource.add(selfLinkBuilder.withRel("update-lecture"));
+
+        return ResponseEntity.created(createUri).body(lectureResource);
     }
 
 }
