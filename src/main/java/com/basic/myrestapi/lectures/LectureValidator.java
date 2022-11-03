@@ -9,6 +9,7 @@ import org.springframework.validation.Errors;
 @Component
 public class LectureValidator {
 	public void validate(LectureReqDto lectureReqDto, Errors errors) {
+		//BasePrice가 MaxPrice보다 크면 에러로 체크
 		if(lectureReqDto.getBasePrice() > lectureReqDto.getMaxPrice() &&
 				lectureReqDto.getMaxPrice() != 0) {
 			//Field Error
@@ -19,10 +20,11 @@ public class LectureValidator {
 		}
 		
 		LocalDateTime endLectureDateTime = lectureReqDto.getEndLectureDateTime();
+
 		if(endLectureDateTime.isBefore(lectureReqDto.getBeginLectureDateTime()) ||
 		   endLectureDateTime.isBefore(lectureReqDto.getCloseEnrollmentDateTime()) ||
 		   endLectureDateTime.isBefore(lectureReqDto.getBeginEnrollmentDateTime()) ) {
-			errors.rejectValue("endRectureDateTime", "wrongValue", "EndRectureDateTime is wrong");
+			errors.rejectValue("endLectureDateTime", "wrongValue", "endLectureDateTime is wrong");
 		}
 	}
 }

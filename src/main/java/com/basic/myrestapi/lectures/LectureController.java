@@ -23,6 +23,7 @@ import java.net.URI;
 public class LectureController {
     private final LectureRepository lectureRepository;
     private final ModelMapper modelMapper;
+    private final LectureValidator lectureValidator;
 
     //constructor injection
 //    public LectureController(LectureRepository lectureRepository) {
@@ -31,6 +32,12 @@ public class LectureController {
 
     @PostMapping
     public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors) {
+        //필드 검증
+        if(errors.hasErrors()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+        //로직 검증
+        this.lectureValidator.validate(lectureReqDto, errors);
         if(errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors);
         }
