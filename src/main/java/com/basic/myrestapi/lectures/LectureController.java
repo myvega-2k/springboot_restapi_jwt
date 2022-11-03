@@ -44,6 +44,9 @@ public class LectureController {
 
         // LectureReqDto => Lecture
         Lecture lecture = modelMapper.map(lectureReqDto, Lecture.class);
+
+        //free와 offline 값 Set
+        lecture.update();
         Lecture addLecture = lectureRepository.save(lecture);
         // Lecture => LectureResDto
         LectureResDto lectureResDto = modelMapper.map(addLecture, LectureResDto.class);

@@ -37,6 +37,7 @@ public class LectureReqDto {
 
     private String location;
 
+    @Digits(integer=3, fraction=0)
     @Min(0)
     private int basePrice;
     @Min(0)
