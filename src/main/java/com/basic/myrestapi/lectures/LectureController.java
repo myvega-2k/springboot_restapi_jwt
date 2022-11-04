@@ -128,15 +128,18 @@ public class LectureController {
                                         Errors errors) {
         Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
         if (optionalLecture.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            //return ResponseEntity.notFound().build();
+            throw new BusinessException(id + " Lecture Not Found", HttpStatus.NOT_FOUND);
         }
         if (errors.hasErrors()) {
             return badRequest(errors);
         }
+
         this.lectureValidator.validate(lectureDto, errors);
         if (errors.hasErrors()) {
             return badRequest(errors);
         }
+
         Lecture existingLecture = optionalLecture.get();
         this.modelMapper.map(lectureDto, existingLecture);
         Lecture savedLecture = this.lectureRepository.save(existingLecture);
