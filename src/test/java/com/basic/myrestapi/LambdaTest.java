@@ -1,5 +1,7 @@
 package com.basic.myrestapi;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +9,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class LambdaTest {
+    @Data @AllArgsConstructor
+    static class Customer {
+        String name;
+        int age;
+    }
+
     @Test
     public void consumer() {
         //Immutable List
