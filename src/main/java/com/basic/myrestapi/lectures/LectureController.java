@@ -102,7 +102,7 @@ public class LectureController {
         return ResponseEntity.ok(pagedResources);
     }
     @GetMapping("/{id}")
-    public ResponseEntity getLecture(@PathVariable Integer id) {
+    public ResponseEntity getLecture(@PathVariable Integer id) throws Exception {
         Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
         if(optionalLecture.isEmpty()) {
             return ResponseEntity.notFound().build();
