@@ -1,4 +1,4 @@
-package com.basic.myrestapi.common;
+package com.basic.myrestapi.common.runner;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
