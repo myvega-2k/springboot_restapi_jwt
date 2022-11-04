@@ -23,7 +23,6 @@ public class BusinessException extends RuntimeException {
     }
 
     public HttpStatus getHttpStatus() {
-
         return httpStatus;
     }
 }

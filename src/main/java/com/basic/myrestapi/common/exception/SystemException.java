@@ -22,7 +22,7 @@ public class SystemException extends RuntimeException {
     }
     
     public SystemException(Throwable t) {
-    	this.throwable = t;
+        this.throwable = t;
     }
     
     public SystemException(String message, HttpStatus httpStatus) {
