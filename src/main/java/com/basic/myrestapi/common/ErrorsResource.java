@@ -1,6 +1,6 @@
 package com.basic.myrestapi.common;
 
-import com.basic.myrestapi.index.IndexController;
+import com.basic.myrestapi.common.index.IndexController;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.validation.Errors;

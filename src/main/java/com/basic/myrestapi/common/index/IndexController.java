@@ -1,4 +1,4 @@
-package com.basic.myrestapi.index;
+package com.basic.myrestapi.common.index;
 
 import com.basic.myrestapi.lectures.LectureController;
 import org.springframework.hateoas.RepresentationModel;
