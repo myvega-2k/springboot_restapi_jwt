@@ -28,7 +28,6 @@ public class AppConfig {
         return new ApplicationRunner() {
             @Autowired
             AccountService accountService;
-
             @Autowired
             AppProperties appProperties;
 
