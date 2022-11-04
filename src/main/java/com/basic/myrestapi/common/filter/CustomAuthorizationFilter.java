@@ -41,7 +41,8 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
         System.out.println("request.getServletPath() + \" \" + request.getMethod() = " + request.getServletPath() + " "
                 + request.getMethod());

@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private Environment env;
 
-    public AuthenticationFilter(Environment env, AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(Environment env, AuthenticationManager authenticationManager) {
         this.env = env;
         super.setAuthenticationManager(authenticationManager);
     }

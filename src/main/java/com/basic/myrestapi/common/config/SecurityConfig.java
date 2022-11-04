@@ -1,7 +1,7 @@
 package com.basic.myrestapi.common.config;
 
 import com.basic.myrestapi.accounts.AccountService;
-import com.basic.myrestapi.common.filter.AuthenticationFilter;
+import com.basic.myrestapi.common.filter.CustomAuthenticationFilter;
 import com.basic.myrestapi.common.filter.CustomAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -47,9 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
     }
 
-    private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter =
-                new AuthenticationFilter(env, authenticationManager());
+    private CustomAuthenticationFilter getAuthenticationFilter() throws Exception {
+        CustomAuthenticationFilter authenticationFilter =
+                new CustomAuthenticationFilter(env, authenticationManager());
         return authenticationFilter;
     }
 
