@@ -4,6 +4,7 @@ import com.basic.myrestapi.accounts.Account;
 import com.basic.myrestapi.accounts.AccountAdapter;
 import com.basic.myrestapi.common.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private Environment env;
@@ -56,5 +58,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         AccountAdapter accountAdapter = (AccountAdapter) authResult.getPrincipal();
         Account account = accountAdapter.getAccount();
         System.out.println("===> 인증성공!! : " + account.getEmail());
+
+        String token = Jwts.builder()
+                .setSubject(account.getEmail())
+                .setExpiration(new Date(System.currentTimeMillis() +
+                        Long.parseLong(env.getProperty("token.expiration_time"))))
+                .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512,
+                        env.getProperty("token.secret"))
+                .compact();
+        response.addHeader("token", token);
     }
 }
