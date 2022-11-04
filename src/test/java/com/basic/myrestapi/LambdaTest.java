@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class LambdaTest {
     @Data @AllArgsConstructor
@@ -20,8 +21,20 @@ public class LambdaTest {
         List<Customer> customers = List.of(new Customer("둘리", 10),
                 new Customer("짱구", 20),
                 new Customer("길동", 30));
-        //1. Customer Name List
+        //1. Customer Name List<String>
+        List<String> stringList = customers.stream() //Stream<Customer>
+                //.map(cust -> cust.getName()) //Stream<Customer>
+                .map(Customer::getName) //Stream<String>
+                .collect(Collectors.toList());//List<String>
+
+        stringList.forEach(System.out::println);
         //2. Customer Age Sum
+        int sum = customers.stream() //Stream<Customer>
+                //.mapToInt(cust -> cust.getAge())  //IntStream
+                .filter(cust -> cust.getAge() > 10)
+                .mapToInt(Customer::getAge)
+                .sum();
+        System.out.println("sum = " + sum);
     }
 
     @Test @Disabled
