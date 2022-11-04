@@ -18,7 +18,8 @@ public class LectureInsertRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        IntStream.range(0, 15).forEach(this::generateLecture);
+        //IntStream.range(0, 15).forEach(this::generateLecture);
+        IntStream.range(0, 15).forEach(index -> generateLecture(index));
     }
 
     private Lecture generateLecture(int index) {
@@ -28,8 +29,8 @@ public class LectureInsertRunner implements ApplicationRunner {
 
     private Lecture buildLecture(int index) {
         return Lecture.builder()
-                .name(index + " event ")
-                .description("test event")
+                .name(index + " lecture ")
+                .description("test lecture")
                 .beginEnrollmentDateTime(LocalDateTime.of(2022, 11, 23, 14, 21))
                 .closeEnrollmentDateTime(LocalDateTime.of(2022, 11, 24, 14, 21))
                 .beginLectureDateTime(LocalDateTime.of(2022, 11, 25, 14, 21))
