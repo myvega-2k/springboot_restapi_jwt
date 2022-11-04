@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -85,8 +87,18 @@ public class LectureController {
         /*
         PagedResourcesAssembler 클래스의 toModel() 메서드
         public <R extends org.springframework.hateoas.RepresentationModel<?>> org.springframework.hateoas.PagedModel<R> 
-           toModel(Page<T> page,org.springframework.hateoas.server.RepresentationModelAssembler<T,R> assembler)
+           toModel(Page<T> page, org.springframework.hateoas.server.RepresentationModelAssembler<T,R> assembler)
+           T : LectureResDto, R : LectureResource
          */
-        return ResponseEntity.ok(pagedModel);
+        /*
+           RepresentationModelAssembler<T,R> 함수형 인터페이스의 추상메서드
+           D toModel(T entity)
+         */
+
+        PagedModel<LectureResource> pagedResources =
+                assembler.toModel(lectureResDtoPage, lectureResDto -> {
+                    return new LectureResource((LectureResDto)lectureResDto);
+                });
+        return ResponseEntity.ok(pagedResources);
     }
 }
