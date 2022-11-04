@@ -1,6 +1,6 @@
 package com.basic.myrestapi.lectures;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.basic.myrestapi.accounts.Account;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,6 +30,9 @@ public class Lecture {
     private int limitOfEnrollment;
     private boolean offline;
     private boolean free;
+
+    @ManyToOne
+    private Account account;
 
     public void update() {
         // Update free
