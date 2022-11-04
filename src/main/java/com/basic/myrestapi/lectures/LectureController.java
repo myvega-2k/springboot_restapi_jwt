@@ -79,7 +79,14 @@ public class LectureController {
         //return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
         Page<Lecture> lecturePage = this.lectureRepository.findAll(pageable);
         Page<LectureResDto> lectureResDtoPage = lecturePage.map(lecture -> modelMapper.map(lecture, LectureResDto.class));
-        PagedModel pagedModel = assembler.toModel(lectureResDtoPage);
+        //1단계 - prev,next 링크 제공
+        //PagedModel pagedModel = assembler.toModel(lectureResDtoPage);
+        //2단계 - prev,next 링크와 Self 링크 함께 제공
+        /*
+        PagedResourcesAssembler 클래스의 toModel() 메서드
+        public <R extends org.springframework.hateoas.RepresentationModel<?>> org.springframework.hateoas.PagedModel<R> 
+           toModel(Page<T> page,org.springframework.hateoas.server.RepresentationModelAssembler<T,R> assembler)
+         */
         return ResponseEntity.ok(pagedModel);
     }
 }
