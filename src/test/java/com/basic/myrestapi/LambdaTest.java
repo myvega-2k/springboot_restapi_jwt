@@ -16,6 +16,15 @@ public class LambdaTest {
     }
 
     @Test
+    public void stream() {
+        List<Customer> customers = List.of(new Customer("둘리", 10),
+                new Customer("짱구", 20),
+                new Customer("길동", 30));
+        //1. Customer Name List
+        //2. Customer Age Sum
+    }
+
+    @Test @Disabled
     public void consumer() {
         //Immutable List
         List<String> list = List.of("aa", "bb", "ccc");
