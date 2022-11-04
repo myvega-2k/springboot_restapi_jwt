@@ -115,7 +115,7 @@ public class LectureController {
         //2. id와 매핑하는 Lecture가 없다면 BusinessException 404 오류를 발생시킨다.
         Lecture lecture = this.lectureRepository
                 .findById(id) //Optional<Lecture>
-                .orElseThrow(() -> new BusinessException(id + " Lecture Not Foud", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(id + " Lecture Not Found", HttpStatus.NOT_FOUND));
 
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
         LectureResource lectureResource = new LectureResource(lectureResDto);
