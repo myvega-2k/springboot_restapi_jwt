@@ -32,7 +32,8 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
     private final String TOKEN_PREFIX = "Bearer";
     private Environment env;
 
-    public CustomAuthorizationFilter(AuthenticationManager authenticationManager, AccountService accountService,
+    public CustomAuthorizationFilter(AuthenticationManager authenticationManager,
+                                     AccountService accountService,
                                      Environment env) {
         super(authenticationManager);
         this.accountService = accountService;
@@ -40,8 +41,10 @@ public class CustomAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("request.getServletPath() + \" \" + request.getMethod() = " + request.getServletPath() + " " + request.getMethod());
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        System.out.println("request.getServletPath() + \" \" + request.getMethod() = " + request.getServletPath() + " "
+                + request.getMethod());
         if (request.getServletPath().equals("/login")) {    // 로그인은 그냥 건너 뛴다
             System.out.println("인증처리 않하기");
             filterChain.doFilter(request, response);

@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     AccountService accountService;
-
     @Autowired
     Environment env;
 
@@ -42,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/login", "/*/signup").permitAll()
                 .and()
                 .addFilter(getAuthenticationFilter())
-                .addFilterBefore(new CustomAuthorizationFilter(authenticationManager(),accountService,env),
+                .addFilterBefore(new CustomAuthorizationFilter(authenticationManager(), accountService, env),
                         UsernamePasswordAuthenticationFilter.class);
         http.headers().frameOptions().disable();
     }
