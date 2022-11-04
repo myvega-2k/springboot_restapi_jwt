@@ -17,13 +17,11 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -41,7 +39,8 @@ public class LectureController {
 //    }
 
     @PostMapping
-    public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors) {
+    public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors)
+        throws Exception {
         //필드 검증
         if(errors.hasErrors()) {
             return badRequest(errors);
@@ -77,7 +76,8 @@ public class LectureController {
     }
 
     @GetMapping
-    public ResponseEntity queryLectures(Pageable pageable, PagedResourcesAssembler<LectureResDto> assembler) {
+    public ResponseEntity queryLectures(Pageable pageable, PagedResourcesAssembler<LectureResDto> assembler)
+            throws Exception{
         //return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
         Page<Lecture> lecturePage = this.lectureRepository.findAll(pageable);
         Page<LectureResDto> lectureResDtoPage = lecturePage.map(lecture -> modelMapper.map(lecture, LectureResDto.class));
@@ -89,12 +89,10 @@ public class LectureController {
         public <R extends org.springframework.hateoas.RepresentationModel<?>> org.springframework.hateoas.PagedModel<R> 
            toModel(Page<T> page, org.springframework.hateoas.server.RepresentationModelAssembler<T,R> assembler)
            T : LectureResDto, R : LectureResource
-         */
-        /*
+
            RepresentationModelAssembler<T,R> 함수형 인터페이스의 추상메서드
            D toModel(T entity)
          */
-
 //        PagedModel<LectureResource> pagedResources =
 //                assembler.toModel(lectureResDtoPage, lectureResDto -> new LectureResource(lectureResDto));
 
@@ -102,5 +100,16 @@ public class LectureController {
                 assembler.toModel(lectureResDtoPage, LectureResource::new);
 
         return ResponseEntity.ok(pagedResources);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity getLecture(@PathVariable Integer id) {
+        Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
+        if(optionalLecture.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Lecture lecture = optionalLecture.get();
+        LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
+        LectureResource lectureResource = new LectureResource(lectureResDto);
+        return ResponseEntity.ok(lectureResource);
     }
 }
