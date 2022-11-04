@@ -65,8 +65,11 @@ public class LectureController {
         //account 정보 set
         lecture.setAccount(account);
         Lecture addLecture = lectureRepository.save(lecture);
+
         // Lecture => LectureResDto
         LectureResDto lectureResDto = modelMapper.map(addLecture, LectureResDto.class);
+        if(addLecture.getAccount() != null)
+            lectureResDto.setEmail(addLecture.getAccount().getEmail());
 
         //http://localhost:8080/api/lectures/10
         WebMvcLinkBuilder selfLinkBuilder = linkTo(LectureController.class).slash(lectureResDto.getId());
@@ -111,6 +114,11 @@ public class LectureController {
 
         //인증토큰이 있다면 insert 할 수 있는 링크 제공
         if(account != null) {
+            pagedResources =
+                    assembler.toModel(lectureResDtoPage, lectureResDto -> {
+                        lectureResDto.setEmail(account.getEmail());
+                        return new LectureResource(lectureResDto);
+                    });
             pagedResources.add(linkTo(LectureController.class).withRel("create-lecture"));
         }
         return ResponseEntity.ok(pagedResources);
@@ -130,6 +138,9 @@ public class LectureController {
                 .orElseThrow(() -> new BusinessException(id + " Lecture Not Found", HttpStatus.NOT_FOUND));
 
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
+        if(currentUser != null)
+            lectureResDto.setEmail(lecture.getAccount().getEmail());
+
         LectureResource lectureResource = new LectureResource(lectureResDto);
         //인증토큰이 있다면 update 할 수 있는 링크 제공
         if((lecture.getAccount() != null) && (lecture.getAccount().equals(currentUser))) {
@@ -164,12 +175,16 @@ public class LectureController {
         if((existingLecture.getAccount() != null) &&
                 (!existingLecture.getAccount().equals(currentUser))) {
             //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-            throw new BusinessException(id + " Lecture를 등록한 사용자와 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
+            throw new BusinessException(id + " Lecture를 수정 할 권한이 없습니다", HttpStatus.UNAUTHORIZED);
         }
 
         this.modelMapper.map(lectureDto, existingLecture);
         Lecture savedLecture = this.lectureRepository.save(existingLecture);
+
         LectureResDto lectureResDto = modelMapper.map(savedLecture, LectureResDto.class);
+        if(savedLecture.getAccount() != null)
+            lectureResDto.setEmail(savedLecture.getAccount().getEmail());
+
         LectureResource LectureResource = new LectureResource(lectureResDto);
         return ResponseEntity.ok(LectureResource);
     }
