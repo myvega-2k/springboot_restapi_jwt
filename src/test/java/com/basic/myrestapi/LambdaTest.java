@@ -20,7 +20,9 @@ public class LambdaTest {
             }
         });
         //2. Lambda Expression
-
+        list.forEach(val -> System.out.println(val));
+        //3. Method Reference
+        list.forEach(System.out::println);
     }
 
 
