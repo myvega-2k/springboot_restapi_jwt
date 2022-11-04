@@ -1,5 +1,7 @@
 package com.basic.myrestapi.lectures;
 
+import com.basic.myrestapi.accounts.Account;
+import com.basic.myrestapi.accounts.CurrentUser;
 import com.basic.myrestapi.common.ErrorsResource;
 import com.basic.myrestapi.common.exception.BusinessException;
 import com.basic.myrestapi.lectures.dto.LectureReqDto;
@@ -41,7 +43,9 @@ public class LectureController {
 //    }
 
     @PostMapping
-    public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto, Errors errors)
+    public ResponseEntity createLecture(@RequestBody @Valid LectureReqDto lectureReqDto,
+                                        Errors errors,
+                                        @CurrentUser Account account)
             throws Exception {
         //필드 검증
         if (errors.hasErrors()) {
@@ -58,6 +62,8 @@ public class LectureController {
 
         //free와 offline 값 Set
         lecture.update();
+        //account 정보 set
+        lecture.setAccount(account);
         Lecture addLecture = lectureRepository.save(lecture);
         // Lecture => LectureResDto
         LectureResDto lectureResDto = modelMapper.map(addLecture, LectureResDto.class);
@@ -78,7 +84,9 @@ public class LectureController {
     }
 
     @GetMapping
-    public ResponseEntity queryLectures(Pageable pageable, PagedResourcesAssembler<LectureResDto> assembler)
+    public ResponseEntity queryLectures(Pageable pageable,
+                                        PagedResourcesAssembler<LectureResDto> assembler,
+                                        @CurrentUser Account account)
             throws Exception {
         //return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
         Page<Lecture> lecturePage = this.lectureRepository.findAll(pageable);
@@ -101,11 +109,15 @@ public class LectureController {
         PagedModel<LectureResource> pagedResources =
                 assembler.toModel(lectureResDtoPage, LectureResource::new);
 
+        //인증토큰이 있다면 insert 할 수 있는 링크 제공
+        if(account != null) {
+            pagedResources.add(linkTo(LectureController.class).withRel("create-lecture"));
+        }
         return ResponseEntity.ok(pagedResources);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getLecture(@PathVariable Integer id) throws Exception {
+    public ResponseEntity getLecture(@PathVariable Integer id, @CurrentUser Account currentUser) throws Exception {
 //        Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
 //        if(optionalLecture.isEmpty()) {
 //            return ResponseEntity.notFound().build();
@@ -119,13 +131,19 @@ public class LectureController {
 
         LectureResDto lectureResDto = modelMapper.map(lecture, LectureResDto.class);
         LectureResource lectureResource = new LectureResource(lectureResDto);
+        //인증토큰이 있다면 update 할 수 있는 링크 제공
+        if((lecture.getAccount() != null) && (lecture.getAccount().equals(currentUser))) {
+            lectureResource.add(linkTo(LectureController.class)
+                    .slash(lecture.getId()).withRel("update-lecture"));
+        }
         return ResponseEntity.ok(lectureResource);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity updateLecture(@PathVariable Integer id,
                                         @RequestBody @Valid LectureReqDto lectureDto,
-                                        Errors errors) {
+                                        Errors errors,
+                                        @CurrentUser Account currentUser) {
         Optional<Lecture> optionalLecture = this.lectureRepository.findById(id);
         if (optionalLecture.isEmpty()) {
             //return ResponseEntity.notFound().build();
@@ -141,6 +159,14 @@ public class LectureController {
         }
 
         Lecture existingLecture = optionalLecture.get();
+
+        //등록한 사용자와 갱신하는 사용자가 다르면 권한 없음 오류 발생
+        if((existingLecture.getAccount() != null) &&
+                (!existingLecture.getAccount().equals(currentUser))) {
+            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            throw new BusinessException(id + " Lecture를 등록한 사용자와 일치하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+
         this.modelMapper.map(lectureDto, existingLecture);
         Lecture savedLecture = this.lectureRepository.save(existingLecture);
         LectureResDto lectureResDto = modelMapper.map(savedLecture, LectureResDto.class);

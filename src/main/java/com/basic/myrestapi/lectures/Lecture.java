@@ -1,6 +1,8 @@
 package com.basic.myrestapi.lectures;
 
 import com.basic.myrestapi.accounts.Account;
+import com.basic.myrestapi.accounts.AccountSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 
 import javax.persistence.*;
@@ -32,6 +34,7 @@ public class Lecture {
     private boolean free;
 
     @ManyToOne
+    @JsonSerialize(using = AccountSerializer.class)
     private Account account;
 
     public void update() {
