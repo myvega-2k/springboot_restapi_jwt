@@ -6,11 +6,13 @@ import com.basic.myrestapi.lectures.dto.LectureResDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,4 +71,8 @@ public class LectureController {
         return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 
+    @GetMapping
+    public ResponseEntity queryLectures(Pageable pageable) {
+        return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
+    }
 }
