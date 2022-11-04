@@ -6,8 +6,11 @@ import com.basic.myrestapi.lectures.dto.LectureResDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -72,7 +75,11 @@ public class LectureController {
     }
 
     @GetMapping
-    public ResponseEntity queryLectures(Pageable pageable) {
-        return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
+    public ResponseEntity queryLectures(Pageable pageable, PagedResourcesAssembler assembler) {
+        //return ResponseEntity.ok(this.lectureRepository.findAll(pageable));
+        Page<Lecture> lecturePage = this.lectureRepository.findAll(pageable);
+        Page<LectureResDto> lectureResDtoPage = lecturePage.map(lecture -> modelMapper.map(lecture, LectureResDto.class));
+        PagedModel pagedModel = assembler.toModel(lectureResDtoPage);
+        return ResponseEntity.ok(pagedModel);
     }
 }

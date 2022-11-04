@@ -23,7 +23,7 @@ public class LambdaTest {
                 new Customer("길동", 30));
         //1. Customer Name List<String>
         List<String> stringList = customers.stream() //Stream<Customer>
-                //.map(cust -> cust.getName()) //Stream<Customer>
+                //.map(cust -> cust.getName()) //Stream<String>
                 .map(Customer::getName) //Stream<String>
                 .collect(Collectors.toList());//List<String>
 
